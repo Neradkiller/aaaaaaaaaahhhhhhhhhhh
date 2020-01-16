@@ -152,15 +152,18 @@ public class Controlador implements ActionListener {
                 registro.setVisible(true);
             }
             if (app.upload == evento.getSource()){
-                                            selector.setVisible(true);
                                             salida.println("sa");
                                             salida.flush();
+                                            selector.archivo.showOpenDialog(selector);
                                             nombre_archivo_subir = selector.archivo.getSelectedFile().getAbsolutePath();
-                                            salida.println(nombre_archivo_subir);
-                                            salida.flush();
+                                            String nombre = selector.archivo.getSelectedFile().getName();
+                                            System.out.println(nombre_archivo_subir);
+                                            //System.out.println(nombre);
+                                            //salida.println(nombre);
+                                            //salida.flush();
                 
                 try {
-                    this.send(conexion, nombre_archivo_subir, salida);
+                    this.send(conexion, nombre_archivo_subir, salida, nombre);
                 } catch (Exception ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -204,20 +207,23 @@ public class Controlador implements ActionListener {
 
 		
 	}
-        public void send(Socket socket_cliente, String archivo, PrintStream salida) throws Exception {
-	    int archivo_len = 0;
+        public void send(Socket socket_cliente, String archivo, PrintStream salida,String nombre) throws Exception {
+	    salida.println(nombre);
+            salida.flush();
+            System.out.println(nombre);
+            int archivo_len = 0;
 		FileInputStream fis = null;
 	    BufferedInputStream bis = null;
 	    OutputStream os = null;
 		os = socket_cliente.getOutputStream();		
-	    File myFile = new File("./FTP/Cliente/" + archivo); // ENVIAR ARCHIVO
+	    File myFile = new File(archivo); // ENVIAR ARCHIVO
 	    byte[] mybytearray = new byte[(int) myFile.length()];
 	    fis = new FileInputStream(myFile);
 	    bis = new BufferedInputStream(fis);
 	    bis.read(mybytearray, 0, mybytearray.length);
 	    os = socket_cliente.getOutputStream();
 	    System.out.println("Sending...");
-	    System.out.println("Sending " + "./FTP/Servidor/ArchivoServidor.txt" + "(" + mybytearray.length + " bytes)");
+	    System.out.println("Sending " + "(" + mybytearray.length + " bytes)");
 	    archivo_len = mybytearray.length;
 	    salida.println(archivo_len);
 	    salida.flush();

@@ -54,9 +54,6 @@ class NuevoHilo extends Thread {
                                 
 				mensaje = entrada.readLine();
 				palabra = mensaje.split(" ");
-                               
-                                
-                                
                                 if(palabra[0].equals("1")){
                                 this.log = palabra[1];
 				this.clave = palabra[2];
@@ -91,8 +88,11 @@ class NuevoHilo extends Thread {
 							      break;
 							  }
 							  else if (mensaje.equals("sa")){ //RECIBIR ARCHIVO
-								  nombre_archivo_bajar = entrada.readLine(); // espera el nombre del archivo
-								  reg.escribir_bitacora(this.log, "subiendo archivo: " + nombre_archivo_bajar);
+                                                                
+                                                                  System.out.println("Esperando nombre archivo");
+								  nombre_archivo_bajar = log +"//"+entrada.readLine(); // espera el nombre del archivo
+                                                                  System.out.println(nombre_archivo_bajar);
+								  //reg.escribir_bitacora(this.log, "subiendo archivo: " + nombre_archivo_bajar);
 								  System.out.println("bajando archivo...");
 							      mensaje = entrada.readLine();
 							      archivo_len = Integer.parseInt(mensaje);
@@ -226,7 +226,7 @@ class manejo_flujos{
 	    BufferedOutputStream bos = null;
 	    byte[] mybytearray = new byte[filesize];
 	    InputStream is = socket_cliente.getInputStream();
-	    fos = new FileOutputStream("./FTP/Servidor/" + nombre_archivo);
+	    fos = new FileOutputStream("C:\\Users\\Daren\\Desktop\\servidor\\"+nombre_archivo);
 	    bos = new BufferedOutputStream(fos);
 	    bytesRead = is.read(mybytearray, 0, mybytearray.length);
 	    current = bytesRead;
