@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import modelo.Cliente_FTP;
 import vista.App;
 import vista.Login;
 import vista.Registro;
@@ -25,7 +24,6 @@ public class Controlador implements ActionListener {
     private selector selector;
     private String usuario;
     private String password;
-    private Cliente_FTP cliente;
     
     private String log;
 	private String clave;
@@ -58,6 +56,7 @@ public class Controlador implements ActionListener {
                 vista.nuevouser.addActionListener(this);
                 registro.registro.addActionListener(this);
                 app.upload.addActionListener(this);
+                app.download.addActionListener(this);
 		hacerVisible();
 	}
 
@@ -85,7 +84,15 @@ public class Controlador implements ActionListener {
 			salida.flush();
 			System.out.println(mensaje);
                         mensaje = entrada.readLine();
-			System.out.println(mensaje);
+			String[] datos = mensaje.split("&");
+                        int i = datos.length;
+                        
+                        for (int n = 0; n < i; n++){
+                            //app.lista.add(datos[n], null);
+                            app.list1.add(datos[n]);
+                        }
+                        
+                        
                         
 			if(!"Usuario no existente".equals(mensaje)){  // si el usuario si existe ejecutar codigo para transferir archivos
 				boolean finalizar = false;
@@ -107,17 +114,9 @@ public class Controlador implements ActionListener {
 					
 					
                                         */
-                                        //case "sa":
+
                                         
-                                        if (app.upload == evento.getSource()){
-                                            selector.setVisible(true);
-                                            salida.println("sa");
-                                            salida.flush();
-                                            nombre_archivo_subir = System.console().readLine("Seleccione archivo a subir: ");
-                                            salida.println(nombre_archivo_subir);
-                                            salida.flush();
-                                        }
-				        //new Cliente_FTP().send(conexion, nombre_archivo_subir, salida);
+                                        
 					
 					
                                         
@@ -151,6 +150,24 @@ public class Controlador implements ActionListener {
                 vista.setVisible(false);
                 registro.setVisible(true);
             }
+            if (app.download == evento.getSource()){
+		salida.println("ba");
+		salida.flush();
+		nombre_archivo_bajar = app.list1.getSelectedItem().toString();
+                System.out.println(nombre_archivo_bajar);
+		salida.println(nombre_archivo_bajar);
+		salida.flush();
+		//mensaje = entrada.readLine();
+		archivo_len = Integer.parseInt(mensaje);
+		System.out.println("tamaño archivo: " + mensaje);
+                try {
+                    this.receiveFile(conexion, archivo_len, nombre_archivo_bajar);
+                } catch (Exception ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+            
             if (app.upload == evento.getSource()){
                                             salida.println("sa");
                                             salida.flush();
@@ -241,7 +258,7 @@ public void receiveFile(Socket socket_cliente, int filesize, String nombre_archi
 	    BufferedOutputStream bos = null;
 	    byte[] mybytearray = new byte[filesize];
 	    InputStream is = socket_cliente.getInputStream();
-	    fos = new FileOutputStream("./FTP/Cliente/" + nombre_archivo);
+	    fos = new FileOutputStream("C:\\Users\\Daren\\Desktop\\" + nombre_archivo);
 	    bos = new BufferedOutputStream(fos);
 	    bytesRead = is.read(mybytearray, 0, mybytearray.length);
 	    current = bytesRead;

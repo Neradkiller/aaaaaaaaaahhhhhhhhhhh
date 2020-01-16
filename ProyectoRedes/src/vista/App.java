@@ -28,6 +28,8 @@ public class App extends java.awt.Frame {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
         upload = new javax.swing.JButton();
+        download = new javax.swing.JButton();
+        list1 = new java.awt.List();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -39,7 +41,14 @@ public class App extends java.awt.Frame {
 
         upload.setText("Subir archivo");
         jLayeredPane1.add(upload);
-        upload.setBounds(40, 60, 100, 30);
+        upload.setBounds(40, 60, 150, 30);
+
+        download.setText("Descargar archivo");
+        download.setActionCommand("");
+        jLayeredPane1.add(download);
+        download.setBounds(230, 60, 150, 30);
+        jLayeredPane1.add(list1);
+        list1.setBounds(40, 100, 340, 190);
 
         add(jLayeredPane1, java.awt.BorderLayout.CENTER);
 
@@ -60,7 +69,9 @@ public class App extends java.awt.Frame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton download;
     private javax.swing.JLayeredPane jLayeredPane1;
+    public java.awt.List list1;
     public javax.swing.JButton upload;
     // End of variables declaration//GEN-END:variables
 }
