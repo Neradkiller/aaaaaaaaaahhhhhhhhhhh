@@ -194,6 +194,92 @@ public static int insertaru(String nombre, String apellido, String  correo, Stri
         return id;
          
 	}
+	
+	        
+                //Crea la carpeta en el servidor
+public void crearNuevaCarpeta(int id_usuario, String nombreNuevaCarpeta, int id_carpetaPadre, String ubicacionCarpetaPadre) throws SQLException{
+        
+        String ubicacion = ubicacionCarpetaPadre +"\\"+nombreNuevaCarpeta;
+        System.out.println(ubicacion);
+        File carpeta = new File(ubicacion);
+        carpeta.mkdir();
+        
+        insertarNuevaCarpeta(id_usuario, nombreNuevaCarpeta, ubicacion, id_carpetaPadre);
+}
+
+                        
+                        //Muestra el contenido del primer nivel de la carpeta, mas no el de las sub carpetas
+public ResultSet mostrarContenidoCarpeta(int id_carpeta)throws SQLException{
+    try{
+            ResultSet result = null;
+            
+            Connection conexion = DriverManager.getConnection(url, user, password);
+            Statement stmt = conexion.createStatement();
+            result = stmt.executeQuery("SELECT nombre, id FROM CARPETA WHERE id_carpeta = "+id_carpeta+" UNION SELECT nombre,id from archivo WHERE id_carpeta = "+id_carpeta+";");
+            while (result.next()){
+                System.out.println("ID = "+result.getInt("id"));
+                System.out.print("Nombre = "+result.getString("nombre"));
+            }
+            stmt.close();
+            conexion.close();
+            return result;
+            } catch (Exception e) {
+            
+               System.out.println(e.getMessage()); return null;}
+}
+
+public ResultSet seleccionarCarpeta(int id) throws SQLException{
+        try{
+            ResultSet result = null;
+            
+            Connection conexion = DriverManager.getConnection(url, user, password);
+            Statement stmt = conexion.createStatement();
+            result = stmt.executeQuery("SELECT * FROM CARPETA WHERE id = "+id+";");
+            while (result.next()){
+                System.out.println("ID = "+result.getInt("id"));
+                System.out.print("Nombre = "+result.getString("nombre"));
+            }
+            stmt.close();
+            conexion.close();
+            return result;
+            } catch (Exception e) {
+            
+               System.out.println(e.getMessage()); return null;}
+}
+
+
+                //Inserta una carpeta que no sea la principal
+public void insertarNuevaCarpeta(int id_miembro, String nombre, String ubicacion, int id_carpetaPadre)throws SQLException{
+        
+        try{
+            Connection conexion = DriverManager.getConnection(url, user, password);
+            Statement stmt = conexion.createStatement();
+        
+            String sql = "INSERT INTO CARPETA (id_miembro, nombre, ruta, id_carpeta) VALUES ("+id_miembro+", '"+nombre+"', '"+ubicacion+"', "+id_carpetaPadre+")";
+            stmt.executeUpdate(sql);
+        
+            stmt.close();
+            conexion.close(); } catch (Exception e) {
+            
+               System.out.println(e.getMessage());
+        }
+}
+
+public void insertarArchivo(String nombre, float peso, int id_carpetaPadre)throws SQLException{
+        
+        try{
+            Connection conexion = DriverManager.getConnection(url, user, password);
+            Statement stmt = conexion.createStatement();
+        
+            String sql = "INSERT INTO ARCHIVO (nombre, peso, id_carpeta) VALUES ('"+nombre+"', "+peso+", "+id_carpetaPadre+")";
+            stmt.executeUpdate(sql);
+        
+            stmt.close();
+            conexion.close(); } catch (Exception e) {
+            
+               System.out.println(e.getMessage());
+        }
+}
 }
 
 
