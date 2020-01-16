@@ -60,15 +60,13 @@ class NuevoHilo extends Thread {
                                 usuario = new Autenticar_Usuario(this.log, this.clave);
                                 
 				existe = this.usuario.Autenticar(this.log, this.clave);
-                                    
-                                    
-                                    
+                                         
                                 System.out.println("inicio ");
 				if(palabra[0].equals("1")){
 					if(existe.equals("si")){           // EL USUARIO SI EXISTE
 						//this.reg.crear_bitacora(this.log);
 						//this.reg.escribir_bitacora(this.log, "autenticado");
-						flujos.enviar_mensaje("Usuario Autenticado. Hola " + this.log, salida);
+                                                flujos.enviar_mensaje(listar.listar_directorio(this.log), salida);
 						while(!finalizar){
 							System.out.println("esperando comando");
 							mensaje = entrada.readLine();
@@ -77,27 +75,33 @@ class NuevoHilo extends Thread {
 							  if(mensaje.equals("ds")){
 								  System.out.println("listando directorio");
 								  this.reg.escribir_bitacora(this.log, "listar directorio servidor");
-								  flujos.enviar_mensaje(listar.listar_directorio(), salida);
+								  flujos.enviar_mensaje(listar.listar_directorio(this.log), salida);
 								  break;
 							  }
 							  else if (mensaje.equals("ba")){ // ENVIAR ARCHIVO
 								  nombre_archivo_subir = entrada.readLine(); // espera el nombre del archivo
-								  this.reg.escribir_bitacora(this.log, "bajando archivo: " + nombre_archivo_subir);
+                                                                  palabra = nombre_archivo_subir.split(" ");
+                                                                  System.out.println(palabra[0]);
+                                                                  nombre_archivo_subir=log+"/"+nombre_archivo_subir;
+                                                                  
+								  //this.reg.escribir_bitacora(this.log, "bajando archivo: " + nombre_archivo_subir);
 								  System.out.println("enviando archivo...");
 							      this.flujos.send(cliente, nombre_archivo_subir, salida);
 							      break;
 							  }
 							  else if (mensaje.equals("sa")){ //RECIBIR ARCHIVO
-                                                                
-                                                                  System.out.println("Esperando nombre archivo");
-								  nombre_archivo_bajar = log +"//"+entrada.readLine(); // espera el nombre del archivo
-                                                                  System.out.println(nombre_archivo_bajar);
+                                                          nombre_archivo_bajar = entrada.readLine(); // espera el nombre del archivo
+                                                                  palabra = nombre_archivo_bajar.split(" ");
+                                                                  System.out.println(palabra[0]);
+                                                                  nombre_archivo_bajar=log+"/"+nombre_archivo_bajar;
+                                                                  
 								  //reg.escribir_bitacora(this.log, "subiendo archivo: " + nombre_archivo_bajar);
 								  System.out.println("bajando archivo...");
 							      mensaje = entrada.readLine();
 							      archivo_len = Integer.parseInt(mensaje);
 							      System.out.println("tama�o archivo: " + mensaje);
 							      flujos.receiveFile(cliente, archivo_len, nombre_archivo_bajar);
+                                                              this.usuario.creararch(log,palabra[0]);
 							      break;
 							  }
 							  else if (mensaje.equals("fin")){ //RECIBIR ARCHIVO
@@ -197,14 +201,14 @@ class manejo_flujos{
 	    OutputStream os = null;
 		os = socket_cliente.getOutputStream();	
 		try {	
-		    File myFile = new File("./FTP/Servidor/" + archivo); // ENVIAR ARCHIVO
+		    File myFile = new File("C:\\Users\\Daren\\Desktop\\servidor\\" + archivo); // ENVIAR ARCHIVO
 		    byte[] mybytearray = new byte[(int) myFile.length()];
 		    fis = new FileInputStream(myFile);
 		    bis = new BufferedInputStream(fis);
 		    bis.read(mybytearray, 0, mybytearray.length);
 		    os = socket_cliente.getOutputStream();
 		    System.out.println("Sending...");
-		    System.out.println("Sending " + "./FTP/Servidor/ArchivoServidor.txt" + "(" + mybytearray.length + " bytes)");
+		    System.out.println("Sending " + "(" + mybytearray.length + " bytes)");
 		    archivo_len = mybytearray.length;
 		    salida.println(archivo_len);
 		    salida.flush();
@@ -298,8 +302,8 @@ class bitacora {
 
 
 class directorio_server {
-	public String listar_directorio () {
-		File folder = new File("./FTP/Servidor");
+	public String listar_directorio (String user) {
+		File folder = new File("C:\\Users\\Daren\\Desktop\\servidor\\"+user);
 		File[] listOfFiles = folder.listFiles();
 		String str = "";
 		for (File file : listOfFiles) {
@@ -307,7 +311,20 @@ class directorio_server {
 		        //System.out.println(file.getName());
 		    	str = str + file.getName() + "&";
 		    }
+                    if(file.isDirectory()){
+                        str = str + file.getName() + "/";
+                        File[] folders = file.listFiles();
+                        String str2 = "";
+                        for(File file2 : folders){
+                            if(file2.isFile()){
+                                str2= str2 + file2.getName() + "&";
+                            }
+                        }
+                        str = str + str2 + "/";
+                        
+                    }
 		}
+                System.out.println(str);
 		return str;
 	}
 } // fin directorio_server
