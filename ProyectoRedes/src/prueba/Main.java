@@ -5,9 +5,11 @@
  */
 package prueba;
 
+
 import vista.App;
 import vista.Login;
 import vista.Registro;
+import vista.selector;
 
 /**
  *
@@ -18,7 +20,8 @@ public class Main {
          Login login = new Login();
          Registro registro = new Registro();
          App app = new App();
-         Controlador control = new Controlador(login,registro,app);
+         selector selector = new selector();
+         Controlador control = new Controlador(login,registro,app,selector);
      }
     
 }

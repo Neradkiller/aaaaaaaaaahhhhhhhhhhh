@@ -20,13 +20,13 @@ public class Autenticar_Usuario {
 	String exito;
         private final static String url = "jdbc:postgresql://localhost:5432/redes";
         private final static String user = "postgres";
-        private final static String password = "101010bry";
-        private static String ubicacion="C:\\Users\\bryrodri\\servidor\\";
+        private final static String password = "134679";
+        private static String ubicacion="C:\\Users\\Daren\\Desktop\\servidor\\";
         
          public static int login(String correo, String contrasena) {
         String SQL = "SELECT id "
                 + "FROM miembro "
-                + "WHERE correo = ? and contraseña= ?";
+                + "WHERE correo = ? and contraseña= MD5(?)";
  
         try (Connection conn = connect();
                 PreparedStatement pstmt = conn.prepareStatement(SQL)) {
@@ -89,7 +89,7 @@ return id;}
 
 public static int insertaru(String nombre, String apellido, String  correo, String contraseña, String ubicacion) {
 
-        String SQL = "INSERT INTO miembro(nombre,apellido, correo, contraseña) " + "VALUES(?,?,?,?)";
+        String SQL = "INSERT INTO miembro(nombre,apellido, correo, contraseña) " + "VALUES(?,?,?,MD5(?))";
 
         int id = 0;
 

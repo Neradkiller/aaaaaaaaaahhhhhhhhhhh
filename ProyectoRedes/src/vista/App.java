@@ -12,7 +12,7 @@ package vista;
 public class App extends java.awt.Frame {
 
     /**
-     * Creates new form app
+     * Creates new form App
      */
     public App() {
         initComponents();
@@ -27,9 +27,7 @@ public class App extends java.awt.Frame {
     private void initComponents() {
 
         jLayeredPane1 = new javax.swing.JLayeredPane();
-        jLayeredPane2 = new javax.swing.JLayeredPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        archivos = new javax.swing.JTree();
+        upload = new javax.swing.JButton();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -37,14 +35,13 @@ public class App extends java.awt.Frame {
             }
         });
 
-        jLayeredPane2.setPreferredSize(new java.awt.Dimension(800, 600));
+        jLayeredPane1.setPreferredSize(new java.awt.Dimension(800, 600));
 
-        jScrollPane1.setViewportView(archivos);
+        upload.setText("Subir archivo");
+        jLayeredPane1.add(upload);
+        upload.setBounds(40, 60, 100, 30);
 
-        jLayeredPane2.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 170, 230, 322);
-
-        add(jLayeredPane2, java.awt.BorderLayout.CENTER);
+        add(jLayeredPane1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -63,9 +60,7 @@ public class App extends java.awt.Frame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JTree archivos;
     private javax.swing.JLayeredPane jLayeredPane1;
-    private javax.swing.JLayeredPane jLayeredPane2;
-    private javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JButton upload;
     // End of variables declaration//GEN-END:variables
 }
